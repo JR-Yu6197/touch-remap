@@ -1,0 +1,15 @@
+[Unit]
+Description=ILITEK Touch Proxy - remaps USB 8.2 touchscreen with different product ID
+After=systemd-udevd.service
+Wants=systemd-udevd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/bin/touch_proxy.py
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

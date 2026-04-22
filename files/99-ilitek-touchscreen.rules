@@ -1,0 +1,27 @@
+# ILITEK Dual Touchscreen Configuration
+# Workaround: Since Mutter maps these to the full virtual screen, use
+# LIBINPUT_CALIBRATION_MATRIX to compress each touchscreen's Y range to
+# its target display area.
+#
+# Display layout:
+#   HDMI-3 (top):    global Y=0    to Y=864
+#   HDMI-7 (bottom): global Y=864  to Y=1728
+# Full virtual: 0 to 1728 (total)
+#
+# Touchscreens currently span full virtual screen (0..1728 on Y).
+# Matrix format: "a b c d e f" where x'=a*x+b*y+c, y'=d*x+e*y+f
+
+# USB 6.2 (TOP / HDMI-3): ignore LIBINPUT_IGNORE_DEVICE setting, apply Y scale 0.5
+# Y range 0..1 → 0..0.5 → TOP display after Mutter's full-screen mapping
+SUBSYSTEM=="input", ATTRS{idVendor}=="222a", ATTRS{idProduct}=="0001", KERNELS=="1-6.2", \
+    ENV{LIBINPUT_CALIBRATION_MATRIX}="1 0 0 0 0.5 0"
+
+# USB 8.2: still ignored (handled by proxy)
+SUBSYSTEM=="input", ATTRS{idVendor}=="222a", ATTRS{idProduct}=="0001", KERNELS=="1-8.2", \
+    ENV{LIBINPUT_IGNORE_DEVICE}="1"
+
+# Virtual device (proxied from USB 8.2 to BOTTOM / HDMI-7): Y scale 0.5 + offset 0.5
+# Y range 0..1 → 0.5..1.0 → BOTTOM display after Mutter's full-screen mapping
+SUBSYSTEM=="input", ATTRS{id/vendor}=="222a", ATTRS{id/product}=="0002", \
+    ENV{ID_INPUT_WIDTH_MM}="309", ENV{ID_INPUT_HEIGHT_MM}="174", \
+    ENV{LIBINPUT_CALIBRATION_MATRIX}="1 0 0 0 0.5 0.5"

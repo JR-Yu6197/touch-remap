@@ -1,0 +1,46 @@
+{
+  "target_usb": "6.2",
+  "device_path": "/dev/input/event14",
+  "screen_w": 1536,
+  "screen_h": 864,
+  "abs_range": 9600,
+  "measurements": [
+    {
+      "target_idx": 0,
+      "display_target_x": 153.60000000000002,
+      "display_target_y": 86.4,
+      "raw_x": 959,
+      "raw_y": 920
+    },
+    {
+      "target_idx": 1,
+      "display_target_x": 1382.4,
+      "display_target_y": 86.4,
+      "raw_x": 8655,
+      "raw_y": 1003
+    },
+    {
+      "target_idx": 2,
+      "display_target_x": 153.60000000000002,
+      "display_target_y": 777.6,
+      "raw_x": 961,
+      "raw_y": 8623
+    },
+    {
+      "target_idx": 3,
+      "display_target_x": 1382.4,
+      "display_target_y": 777.6,
+      "raw_x": 8649,
+      "raw_y": 8646
+    }
+  ],
+  "matrix": "0.998438 0.000258 0.000028 -0.006898 1.000895 0.003214",
+  "matrix_values": [
+    0.9984378874084198,
+    0.0002582099654981196,
+    2.798142715394915e-05,
+    -0.006898475993874492,
+    1.0008952195345242,
+    0.0032144596145741167
+  ]
+}
