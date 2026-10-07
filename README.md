@@ -22,6 +22,22 @@ Four layers combined:
 | 3 | **EDID override** (kernel cmdline + firmware blob) | Rewrites the bottom display's EDID serial from `demoset-1` to `demoset-2`, so GNOME sees two *different* outputs |
 | 4 | **`LIBINPUT_CALIBRATION_MATRIX`** | Since Mutter still routes both touches to the full virtual screen, this per-device matrix compresses each touchscreen's Y range to cover only its own display |
 
+## Quick Alternative: `calibrate_layout.py` (matrix only)
+
+Layer 4 on its own is enough whenever Mutter leaves both touchscreens unmapped (each one spans the whole virtual screen). That is the default with this hardware as long as no dconf mapping is set: Mutter's `GetDeviceMapping` reports "Device is not mapped to any output" for both. `calibrate_layout.py` installs only that layer, with nothing hardcoded:
+
+```bash
+python3 calibrate_layout.py            # asks for sudo, then asks you to touch one display
+python3 calibrate_layout.py --dry-run  # show the detected layout and matrices only
+python3 calibrate_layout.py --remove   # delete the udev rule
+```
+
+- Reads the current arrangement from Mutter (Settings → Displays) and derives one matrix per display, so any position, resolution or scale works (rotation is not supported)
+- Finds out which USB port belongs to which display by asking you to touch it
+- Writes `/etc/udev/rules.d/99-ilitek-touchscreen.rules` and rebinds `usbhid` so the matrices apply immediately — no proxy, no EDID override, no reboot
+
+Re-run it after changing the display arrangement or scale, or after moving a touchscreen to another USB port. Use it **instead of** `install.sh`, not together with it (both write the same rules file).
+
 ## Hardware Assumptions
 
 | | Top display | Bottom display |
@@ -43,6 +59,7 @@ touch-remap/
 ├── README.md                  # This file
 ├── install.sh                 # Automated installer
 ├── uninstall.sh               # Reverter
+├── calibrate_layout.py        # Matrix-only setup that follows the current display arrangement
 ├── create_edid_override.py    # Generates the EDID firmware blob from the current HDMI-7 EDID
 ├── files/
 │   ├── touch_proxy.py         # uinput proxy service
